@@ -13,4 +13,4 @@ python verifyBundle.py
 v4l2-ctl -c exposure_absolute=350
 
 Display all controls: v4l2-ctl -L
-Adjust Some Parameter:v4l2-ctl -c <option>=<value>
+Adjust Some Parameter:v4l2-ctl -c option=value
