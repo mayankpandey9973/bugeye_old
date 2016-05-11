@@ -1,0 +1,2 @@
+#!/bin/bash
+ffmpeg -i proc_out%05d.jpg -c:v libx264 -r 30 -s 640x480 out.mp4
