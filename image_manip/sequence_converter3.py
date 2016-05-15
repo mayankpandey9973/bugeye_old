@@ -11,9 +11,14 @@ from PIL import Image
 from timeit import default_timer as timer
 import sys, getopt
 #import statistics
-    
-execfile('/home/manish/bugeye/image_manip/mapping_640_480.py')
-execfile('/home/manish/bugeye/image_manip/imagepos_mapping_adjusted_fixed.py')
+
+bugeye_dir = os.getenv('BUGEYE')
+mapping_file = bugeye_dir + '/image_manip/mapping_640_480.py'
+imagepos_file = bugeye_dir + '/image_manip/imagepos_mapping_adjusted_fixed.py'
+execfile(mapping_file)
+execfile(imagepos_file)
+#execfile('/home/manish/bugeye/image_manip/mapping_640_480.py')
+#execfile('/home/manish/bugeye/image_manip/imagepos_mapping_adjusted_fixed.py')
 
 writeHex = True
 intrplBlanks = True

@@ -1,3 +1,13 @@
+#Setup:
+
+Include bin directory in path.
+Define BUGEYE environment variable
+
+For bash shell:
+export PATH=$PATH:$BUGEYE/bin/:.
+export BUGEYE=$HOME/bugeye
+
+
 #Capturing Images and converting to video
 
 mkdir trainingdatadir
