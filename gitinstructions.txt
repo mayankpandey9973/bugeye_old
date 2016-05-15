@@ -1,9 +1,23 @@
 echo "# bugeye" >> README.md
+
+#To get started the very first time
 git init
 git add README.md
 git commit -m "first commit"
 git remote add origin https://github.com/mayankpandey9973/bugeye.git
 git push -u origin master
+
+#To set up git cache for login credential
 git config credential.helper store
 git config --global credential.helper 'cache --timeout 7200'
+
+#To clone the repository
 git clone https://github.com/mayankpandey9973/bugeye.git
+
+#To pull latest changes in the repository
+git pull https://github.com/mayankpandey9973/bugeye.git
+
+#To push updated files to repository
+git add <filenames>
+git commit -m "my comment"
+git push -u origin master
