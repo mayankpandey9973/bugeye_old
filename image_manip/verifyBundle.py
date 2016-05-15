@@ -21,8 +21,8 @@ width = 640
 height = 480
 execfile('mapping_640_480.py')    
 #img1 = mpimg.imread('/home/manish/bugeye/image_manip/image2_640_480.jpg')
-img1 = mpimg.imread('/home/manish/bugeye/image_manip/validate_mapping_image.jpg')
-
+#img2 = mpimg.imread('/home/manish/bugeye/image_manip/validate_mapping_image.jpg')
+img1 = mpimg.imread('/home/manish/bugeye/image_manip/out00102.png')
 print(img1.shape)
 print(img1.dtype)
 
