@@ -71,11 +71,6 @@ def eye2image(inputfile, outputfile):
                 red = rsum/25
                 green = gsum/25
                 blue = bsum/25
-                #red = (red/20)*20
-                #green = (green/20)*20
-                #blue = (blue/20)*20
-                if(i==42):
-                    print("RGB=[%d,%d,%d]" % (red,green,blue))
                 
                 if(False):
                     #Get Image Data for ith bundle - 4 pixels around coordinates
@@ -180,7 +175,7 @@ def eye2image(inputfile, outputfile):
     if(writeHex):
         write_img_data = np.fliplr(np.rot90(write_img_data, 3))
                     
-    img = Image.fromarray(write_img_data, 'RGB')
+    img = Image.fromarray(write_img_data, mode='RGB')
     end = timer()
     print('Processing time = %f\n' % (end - start))
     img.save(outputfile)
@@ -279,7 +274,7 @@ def main():
         if (name[:3] == 'out' and name[(len(name)-3):] == 'jpg'):
             if os.path.isfile(os.path.join(path, name)):
                 print('Processing %s' % (name))
-                eye2image(path + '/' + name, path + '/' + 'proc_' + name)
+                eye2image(path + '/' + name, path + '/' + 'proc_' + name[:-3] + 'png')
             
 main()
 
