@@ -1,3 +1,13 @@
 #!/bin/bash
+#Create a new raw directory if it does not exist
+[[ -d raw   ]] || mkdir raw
+[[ -d small ]] || mkdir small
+[[ -d med   ]] || mkdir med
+[[ -d hex   ]] || mkdir hex
+[[ -d small_diff  ]] || mkdir small_diff
+[[ -d med_diff  ]] || mkdir med_diff
+[[ -d hex_diff  ]] || mkdir hex_diff
 #ffmpeg -i /dev/video0 -s 640x480 -q:v 2 -r 30 out%05d.jpg
-ffmpeg -i /dev/video0 -s 640x480 -q:v 2 -r 30 out%05d.png
+ffmpeg -i /dev/video0 -s 640x480 -q:v 2 -r 30 raw/out%05d.png
+#Drop 1st 10 frames - about 0.33 secs
+rm raw/out0000?.png

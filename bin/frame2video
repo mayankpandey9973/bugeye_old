@@ -1,3 +1,21 @@
 #!/bin/bash
 #ffmpeg -i proc_out%05d.jpg -c:v libx264 -r 30 -s 640x480 out.mp4
-ffmpeg -i proc_out%05d.png -c:v libx264 -r 60 -s 1280x1024 out1.mp4
+cd small
+echo "****** Converting small"
+ffmpeg  -start_number 10 -i proc_out%05d.png   -c:v libx264 -r 60 -s 1280x1024 out.mp4
+cd ../med
+echo "****** Converting med"
+ffmpeg -start_number 10 -i proc_out%05d.png    -c:v libx264 -r 60 -s 1280x1024 out.mp4
+cd ../hex
+echo "****** Converting hex"
+ffmpeg  -start_number 10 -i proc_out%05d.png   -c:v libx264 -r 60 -s 1280x1024 out.mp4
+cd ../small
+echo "****** Converting diff small"
+ffmpeg  -start_number 10 -i diff_proc_out%05d.png   -c:v libx264 -r 60 -s 1280x1024 out.mp4
+cd ../med
+echo "****** Converting diff med"
+ffmpeg -start_number 10 -i diff_proc_out%05d.png    -c:v libx264 -r 60 -s 1280x1024 out.mp4
+cd ../hex
+echo "****** Converting diff hex"
+ffmpeg  -start_number 10 -i diff_proc_out%05d.png   -c:v libx264 -r 60 -s 1280x1024 out.mp4
+
