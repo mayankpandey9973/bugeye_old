@@ -6,3 +6,4 @@ git remote add origin https://github.com/mayankpandey9973/bugeye.git
 git push -u origin master
 git config credential.helper store
 git config --global credential.helper 'cache --timeout 7200'
+git clone https://github.com/mayankpandey9973/bugeye.git
