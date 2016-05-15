@@ -39,7 +39,7 @@ def eye2image(inputfile, outputfile):
             for k in range(-2,4):
                 write_img_data[Imagepos[i][1]+j, Imagepos[i][0]+k] = [red, green, blue]
     
-    img = Image.fromarray(write_img_data, mode='RGB')
+    img = Image.fromarray(write_img_data, 'RGB')
     img.save(outputfile)
 
     if debug_on:

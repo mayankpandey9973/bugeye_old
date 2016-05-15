@@ -59,7 +59,6 @@ def eye2image(inputfile, outputfile):
                 red = pixlvalue[0]
                 green = pixlvalue[1]
                 blue = pixlvalue[2]
-                print("RGB = %f %f %f" % (pixlvalue[0],pixlvalue[1],pixlvalue[2]))
             else:
                 #Get colors from +-2 pixels adjacent to ex and ey
 
