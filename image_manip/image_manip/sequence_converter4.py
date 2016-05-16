@@ -20,17 +20,28 @@ execfile(imagepos_file)
 #execfile('/home/manish/bugeye/image_manip/mapping_640_480.py')
 #execfile('/home/manish/bugeye/image_manip/imagepos_mapping_adjusted_fixed.py')
 
-writeHex = True
+writeHex = False
+writeMed = False
+writeSmall = False
+path = ''
 intrplBlanks = True
 dirname = 'none'
-def median(l):
-    return np.median(np.array(l))	
-def eye2image(inputfile, outputfile):
-    debug_on = False
 
+
+def eye2image(inputfile, outputfile, hexSize, medSize, smallSize):
+
+    debug_on = False
     width, height = 80, 88
-    if(writeHex):
+    if(hexSize):
         width, height = 350, 370
+    elif(medSize):
+        width, height = 80, 88
+    elif(smallSize):
+        width, height = 20, 22
+    else:
+        print('Error: Invalid Size Option\n')
+        sys.exit(2)
+        
     write_img_data = np.zeros((width, height, 3), dtype=np.uint8)
 
     #Interpolate for blank tiles
@@ -38,18 +49,16 @@ def eye2image(inputfile, outputfile):
         Imagepos.append([32,24]) #100
         Imagepos.append([50,27]) #101
         Imagepos.append([68,42]) #102
-        
 
     read_img = mpimg.imread(inputfile)
 
     start = timer()
 
     for i in range(0,103):#    for i in range(0,103):
-#    for i in range(0,1):#    for i in range(0,103):
         single_pixel_sample = False
         red = green = blue = 1.0
         #Index i > 99 only valid for interpolation mode in hex display
-        if((i > 99) and (not (intrplBlanks and writeHex))):
+        if((i > 99) and (not (intrplBlanks and hexSize))):
             break
 
         if(i < 100):
@@ -142,8 +151,8 @@ def eye2image(inputfile, outputfile):
                    + float(read_img[Eyepos[24][1], Eyepos[25][0]][2])
                    + float(read_img[Eyepos[23][1], Eyepos[23][0]][2]))/6.0
             
-            
-        if(writeHex):
+
+        if(hexSize):
             t1 = timer()
             x = (Imagepos[i][0] - 2)/6 * 24 
             y = (Imagepos[i][1]/3)*14
@@ -169,17 +178,29 @@ def eye2image(inputfile, outputfile):
             write_img_data[x-8:x+9,y-14:y+15] = [red*255, green*255, blue*255]
             t2 = timer()
             #print('Inner Loop Processing Pime = %f\n' % (t2 - t1))
-        else:
+        elif(medSize):
             for j in range(-2,4):
                 for k in range(-2,4):
                     write_img_data[Imagepos[i][1]+j, Imagepos[i][0]+k] = [red*255, green*255, blue*255]
                     #print("pos[%d,%d]=[%f,%f,%f]" % (Imagepos[i][1]+j, Imagepos[i][0]+k, red, green, blue))
-    if(writeHex):
+        elif(smallSize):
+            for j in range(-2,4):
+                for k in range(-2,4):
+                    write_img_data[(Imagepos[i][1]+j)/4, (Imagepos[i][0]+k)/4] = [red*255, green*255, blue*255]
+                    #print("pos[%d,%d]=[%f,%f,%f]" % (Imagepos[i][1]+j, Imagepos[i][0]+k, red, green, blue))
+        else:
+            print('Error: Unknown Option.\nExiting.' % (path))
+            sys.exit(2)
+            
+                
+
+            
+    if(hexSize):
         write_img_data = np.fliplr(np.rot90(write_img_data, 3))
                     
     img = Image.fromarray(write_img_data, mode='RGB')
     end = timer()
-    print('Processing time = %f\n' % (end - start))
+    print('Processing time = %f' % (end - start))
     img.save(outputfile)
 
     if debug_on:
@@ -212,41 +233,53 @@ def main():
 
     #Convert images captured in <dirname> to ordered tiles
     #Usage:
-    #sequence_converter3.py -dir <dirname> [-hex|-nohex] [-interpolate|-nointerpolate]
+    #sequence_converter3.py -dir <dirname> [-hex|-med|-small] [-interpolate|-nointerpolate]
     #
     #Options:
     #-dir: specify directory name to do processing
     #-hex: Specify tiles to be large hex pixels with -hex, or as 6x6 square tiles. Default True
     #-interpolate: Specify if the missing 3 tiles are to be interpolated with color of six neighboring tiles. Default True.
+
     global writeHex
+    global writeMed
+    global WriteSmall
     global intrplBlanks
     global dirname
-    
+    global path
+
+    writeHex = False
+    writeMed = False
+    writeSmall = False
     try:
-        opts, args = getopt.getopt(sys.argv[1:],"x",["dir=","hex","nohex","interpolate","nointerpolate","help"])
+        opts, args = getopt.getopt(sys.argv[1:],"x",["dir=","hex","med","small","interpolate","nointerpolate","help"])
     except getopt.GetoptError:
-        print("sequence_converter3.py --dir=<dirname> [--help][--hex|--nohex] [--interpolate|--nointerpolate]")
+        print("sequence_converter4.py --dir=<dirname> [--help][--hex|--med|--small] [--interpolate|--nointerpolate]")
         sys.exit(2)
     for opt, arg in opts:
        if opt == '--help':
-           print('sequence_converter3.py -dir=<dirname> [--help][--hex|--nohex] [--interpolate|--nointerpolate]')
+           print('sequence_converter4.py -dir=<dirname> [--help][--hex|--med|--small] [--interpolate|--nointerpolate]')
            sys.exit()
        elif opt in ("-d", "--dir"):
            dirname = arg
        elif opt in ("-h", "--hex"):
            writeHex = True
-       elif opt in ("--nohex"):
-           writeHex = False
+       elif opt in ("--med"):
+           writeMed = True
+       elif opt in ("--small"):
+           writeSmall = True
        elif opt in ("-i", "--interpolate"):
            intrplBlanks = True
        elif opt in ("--nointerpolate"):
            intrplBlanks = False
 
-    basepath = '/home/manish/bugeye/image_manip'
-    path = ''
-    print("Running with options (rundir=%s):" % (basepath))
+    #    basepath = '/home/manish/bugeye/image_manip'
+    basepath = ''
+    path = 'foo'
+    print("Running with options:")
     print('   Dirname: %s' % (dirname))
     print('   Hex: %r' % (writeHex))
+    print('   Med: %r' % (writeMed))
+    print('   Small: %r' % (writeSmall))
     print('   Intrpl: %r' % (intrplBlanks))
 
 
@@ -262,23 +295,45 @@ def main():
     elif(dirname[0] == '.'):
         path = os.getenv('PWD')
 
-    print('PATH = %s\n' % (path))
+    #path appended by raw
+    rawpath = path + '/raw'
+    dstpath = ''
+    
+    print('PATH = %s' % (path))
 
-    #Read files in directory specified with names of form out%5d.jpg and convert to proc_out%5.jpg
+    #Read files in directory specified with names of form raw/out%5d.jpg and convert to (hex|med|small)/proc_out%5.jpg
 
     if(not os.path.isdir(path)):
         print('Error: Directory %s does not exist.\nExiting.' % (path))
         sys.exit(2)
-    
-    lst = os.listdir(path)
+
+    if(not os.path.isdir(rawpath)):
+        print('Error: Directory %s does not exist.\nExiting.' % (rawpath))
+        sys.exit(2)
+
+    if(writeHex):
+        dstpath = path + '/hex'
+    elif(writeMed):
+        dstpath = path + '/med'
+    elif(writeSmall):
+        dstpath = path + '/small'
+    else:
+        print('Error: Invalid Path Option\n')
+        sys.exit(2)
+        
+    if(not os.path.isdir(dstpath)):
+        print('Error: Directory %s does not exist.\nExiting.' % (dstpath))
+        sys.exit(2)
+
+    lst = os.listdir(rawpath)
     lst.sort()
     for name in lst:
-#    for name in lst[:1]:
         if (name[:3] == 'out' and name[(len(name)-3):] == 'png'):
-            if os.path.isfile(os.path.join(path, name)):
+            if os.path.isfile(os.path.join(rawpath, name)):
                 print('Processing %s' % (name))
-                eye2image(path + '/' + name, path + '/' + 'proc_' + name[:-3] + 'png')
+                eye2image(rawpath + '/' + name, dstpath + '/' + 'proc_' + name[:-3] + 'png', writeHex, writeMed, writeSmall)
             
+
 main()
 
 
